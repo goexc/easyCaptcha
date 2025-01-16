@@ -1,6 +1,7 @@
 package easyCaptcha
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -13,6 +14,7 @@ func TestCaptchaGeneration(t *testing.T) {
 		Text:       "TEST",
 		NoiseCount: 100,
 		CurveCount: 2,
+		BgImagePath: "./bg.jpg",
 	}
 
 	captchaInstance, err := GenerateCaptcha(config)
@@ -46,4 +48,5 @@ func TestCaptchaGeneration(t *testing.T) {
 	if len(base64String) == 0 {
 		t.Error("Base64 string is empty")
 	}
+	fmt.Println(base64String)
 }

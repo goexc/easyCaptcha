@@ -15,7 +15,7 @@ EasyCaptcha 是一个用于生成可定制图形验证码的 Go 包。它允许�
 
 ```bash
 # 克隆仓库
-git clone <repository-url>
+git clone git@github.com:goexc/easyCaptcha.git
 
 # 进入项目目录
 cd easyCaptcha
@@ -29,49 +29,54 @@ go mod tidy
 以下是如何使用 EasyCaptcha 的基本示例：
 
 ```go
-package main
+package easyCaptcha
 
 import (
-	"log"
-	"e:/Go2/easyCaptcha/captcha"
+	"testing"
 )
 
-func main() {
-	config := captcha.CaptchaConfig{
+func TestCaptchaGeneration(t *testing.T) {
+	config := CaptchaConfig{
 		Width:      240,
 		Height:     80,
 		FontPath:   "./font/monaco.ttf",
 		FontSize:   36,
-		Text:       "ABCD",
+		Text:       "TEST",
 		NoiseCount: 100,
 		CurveCount: 2,
 	}
 
-	captchaInstance, err := captcha.GenerateCaptcha(config)
+	captchaInstance, err := GenerateCaptcha(config)
 	if err != nil {
-		log.Fatalf("Failed to generate captcha: %v", err)
+		t.Fatalf("Failed to generate captcha: %v", err)
 	}
 
-	// 导出为 PNG
+	// Test PNG export
 	pngData, err := captchaInstance.ToPNG()
 	if err != nil {
-		log.Fatalf("Failed to export PNG: %v", err)
+		t.Errorf("Failed to export PNG: %v", err)
 	}
-	log.Printf("PNG 数据大小: %d 字节", len(pngData))
+	if len(pngData) == 0 {
+		t.Error("PNG data is empty")
+	}
 
-	// 导出为 JPG
+	// Test JPG export
 	jpgData, err := captchaInstance.ToJPG()
 	if err != nil {
-		log.Fatalf("Failed to export JPG: %v", err)
+		t.Errorf("Failed to export JPG: %v", err)
 	}
-	log.Printf("JPG 数据大小: %d 字节", len(jpgData))
+	if len(jpgData) == 0 {
+		t.Error("JPG data is empty")
+	}
 
-	// 导出为 Base64 字符串
+	// Test Base64 export
 	base64String, err := captchaInstance.ToString()
 	if err != nil {
-		log.Fatalf("Failed to export Base64 string: %v", err)
+		t.Errorf("Failed to export Base64 string: %v", err)
 	}
-	log.Printf("Base64 字符串长度: %d 字符", len(base64String))
+	if len(base64String) == 0 {
+		t.Error("Base64 string is empty")
+	}
 }
 ```
 
@@ -83,8 +88,9 @@ func main() {
 - `Text`：验证码中显示的字符。
 - `NoiseCount`：添加的随机噪点数量（默认 100）。
 - `CurveCount`：绘制的随机曲线数量（默认 2）。
-- `BgColor`：如果不使用图像，则为背景颜色。
+- `BgColor`：背景颜色，如果不使用图像。
 - `BgImagePath`：背景图像文件的路径。
+- `CharColor`：字符颜色。
 
 ## 许可证
 
