@@ -1,6 +1,6 @@
-module easyCaptcha
+module github.com/goexc/easyCaptcha
 
-go 1.23.4
+go 1.23
 
 require github.com/fogleman/gg v1.3.0
 
