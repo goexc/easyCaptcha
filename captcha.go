@@ -3,16 +3,17 @@ package easyCaptcha
 import (
 	"bytes"
 	"encoding/base64"
-	"github.com/fogleman/gg"
 	"image"
 	"image/color"
 	"image/jpeg"
 	"image/png"
 	"math/rand"
+	"path/filepath"
+	"runtime"
 	"time"
+
+	"github.com/fogleman/gg"
 )
-
-
 
 // CaptchaConfig 包含生成验证码的配置参数
 // CaptchaConfig holds the configuration for the captcha
@@ -65,13 +66,19 @@ func (c *Captcha) ToString() (string, error) {
 	return base64.StdEncoding.EncodeToString(pngData), nil
 }
 
+// getDefaultFontPath returns the absolute path to the default font file
+func getDefaultFontPath() string {
+	_, filename, _, _ := runtime.Caller(0)
+	return filepath.Join(filepath.Dir(filename), "font", "default.ttf")
+}
+
 // GenerateCaptcha 根据提供的配置生成验证码图像
 // GenerateCaptcha creates a captcha image based on the provided configuration
 // 返回一个Captcha实例
 func GenerateCaptcha(config CaptchaConfig) (*Captcha, error) {
 	// Set default values if not provided
 	if config.FontPath == "" {
-		config.FontPath = "./arial.ttf"
+		config.FontPath = getDefaultFontPath()
 	}
 	if config.FontSize == 0 {
 		config.FontSize = 36
